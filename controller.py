@@ -32,5 +32,5 @@ class Convert():
          
 
 if __name__ == "__main__":
-  c = Convert('./data/text.md', NAVER_ID, NAVER_PASSWORD)
+  c = Convert('./data/test.md', NAVER_ID, NAVER_PASSWORD)
   c()

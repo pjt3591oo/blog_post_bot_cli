@@ -17,10 +17,10 @@ class Root:
 class Node:
   
   def __init__(self, children): 
-    self.type = ""             # text, code
+    self.type = ""             # text, code, img
     self.size = ""             # 15, 16, ...
     self.bold = ""             # True, False
-    self.text = children.text.strip().replace('  ', ' ')  # hello world
+    self.text = children.text.strip().replace('  ', ' ')  
     self.children = children
     self.childrens = []        # [Node, Node, ...]
     
@@ -38,6 +38,7 @@ class Node:
     tag = self.children.name
 
     self.type = self.tag_type_map()
+    self.text = self.get_tag_text()
     self.size = self.tag_size_map(tag)
     self.bold = self.tag_bold_map(tag)
 
@@ -57,15 +58,27 @@ class Node:
 
     return map.get(tag, '15')
 
+  def get_tag_text(self):
+    map = {
+      "text": lambda : self.children.text,
+      "code": lambda : self.children.text,
+      "img": lambda: self.children.find('img').get('src')
+    }
+    
+    return map[self.type]()
 
   def tag_type_map(self):
 
-    c = self.children.find('code')
+    is_code = self.children.find('code')
+    
+    node_type = 'text'
 
-    if c != None:
-      return self.children.text == self.children.find('code').text and 'code' or 'text' 
+    if is_code != None:
+      node_type = self.children.text == self.children.find('code').text and 'code' or 'text' 
+    elif self.children.find('img') != None:
+      node_type = 'img'
 
-    return 'text'
+    return node_type
 
   def tag_bold_map(self, tag):
     map = {
@@ -75,11 +88,7 @@ class Node:
     return map.get(tag, 'False')
 
 def read(path):
-  html = markdown_path('test.md')
-
-  # a = open('index.html', 'w')
-  # a.write(html)
-  # a.close()
+  html = markdown_path(path)
 
   return _soup(html)
 
@@ -98,7 +107,7 @@ def convert(soup):
   return root
 
 if __name__ == '__main__':
-  soup = read('.test.md')
+  soup = read('./data/test1.md')
 
   root = convert(soup)
   for node in root.nodes:
