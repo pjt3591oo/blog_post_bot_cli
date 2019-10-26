@@ -1,0 +1,4 @@
+config.py
+chromedriver
+data/*.md
+__pycache__
