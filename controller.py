@@ -11,12 +11,15 @@ class Convert():
 
 
   def text_setting(self, node):
-    self.naver.inputText('')
-    self.naver.setFontSize(node.size)
-    if node.bold : self.naver.setBold()
+    self.naver.input_text('')
+    self.naver.set_font_size(node.size)
+    if node.bold : self.naver.set_bold()
 
   def code_setting(self, node):
-    self.naver.setCode(node.text)
+    self.naver.set_code(node.text)
+
+  def img_setting(self, node):
+    self.naver.input_img(node.text)
 
   def __call__(self):
     
@@ -25,11 +28,13 @@ class Convert():
       
       if node.type == 'text':
         self.text_setting(node)
-        self.naver.inputText(node.text + '\n')
+        self.naver.input_text(node.text + '\n')
 
       elif node.type =='code':
         self.code_setting(node)
          
+      elif node.type == 'img':
+        self.img_setting(node)
 
 if __name__ == "__main__":
   c = Convert('./data/test.md', NAVER_ID, NAVER_PASSWORD)

@@ -1,6 +1,8 @@
 from selenium import webdriver
 import time
+from selenium.webdriver.common import keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.file_detector import UselessFileDetector
 from config import NAVER_ID, NAVER_PASSWORD
 
 
@@ -20,12 +22,12 @@ class Naver:
 
     self.driver.find_element_by_id('label_ip_on').click()
     self.driver.find_element_by_xpath('//*[@id="frmNIDLogin"]/fieldset/input').click()
-    time.sleep(2)
+    time.sleep(7)
 
     self.move_blog_editor()
     print('>>> login complete <<<')
 
-  def setBold(self):
+  def set_bold(self):
     # self.last_text_line_focus()
     selector = "se-toolbar-button-bold"
     s = "document.getElementsByClassName('%s')[0].click()"%(selector)
@@ -35,7 +37,7 @@ class Naver:
 
     print('>>> font weight complete <<<')
 
-  def setFontSize(self, size):
+  def set_font_size(self, size):
     # self.last_text_line_focus()
     selector = "se-toolbar-button-font-size-code"
     size = str(size)
@@ -64,7 +66,7 @@ class Naver:
 
     print('>>> font size complete <<<')
 
-  def setCode(self,  text): 
+  def set_code(self,  text): 
     # 소스코드 추가
     selector = "se-toolbar-button-code" 
     query = "document.getElementsByClassName('%s')[0].click()"%(selector)
@@ -83,7 +85,28 @@ class Naver:
 
     print('>>> typing code complete <<<')
 
-  def inputText(self, text):
+  def input_img_btn_click(self):
+    # 사진 버튼을 눌러야 input창이 발생
+    time.sleep(0.5)
+    selector = '.se-toolbar-item-image'
+    img_tag = self.driver.find_element_by_css_selector('%s'%(selector))
+    time.sleep(0.5)
+    img_tag.click()
+    time.sleep(0.5)
+    webdriver.ActionChains(self.driver).send_keys(keys.Keys.ESCAPE).perform()
+    time.sleep(0.5)
+
+  def input_img(self, path):
+    print(path)
+    self.input_img_btn_click()
+
+    x_path = '/html/body/input[1]'
+    img_tag = self.driver.find_element_by_xpath(x_path)
+
+    img_tag.send_keys(path)
+    time.sleep(0.5)
+
+  def input_text(self, text):
     self.last_text_line_focus()
   
     actions = ActionChains(self.driver)
@@ -94,7 +117,7 @@ class Naver:
     print('>>> typing text complete <<<')
 
   def move_blog_editor(self):
-    self.driver.get('https://blog.naver.com/angdnp/postwrite')
+    self.driver.get('https://blog.naver.com/%s/postwrite'%(self.id.replace("'", '')))
     time.sleep(2)
     
   def last_text_line_focus(self):
@@ -112,30 +135,30 @@ if __name__ == "__main__":
   # 아이디/비밀번호를 입력해준다.
   naver = Naver(NAVER_ID, NAVER_PASSWORD)
 
-  naver.setBold()
+  naver.set_bold()
 
-  naver.setFontSize(13)
+  naver.set_font_size(13)
 
   code1 = 'let a = 10;'
   code2 = '''function test() {
   console.log('hello world');
 }'''
 
-  naver.setCode(code1)
-  naver.setCode(code2)
+  naver.set_code(code1)
+  naver.set_code(code2)
 
-  # naver.setBold()
-  naver.inputText('안녕하세요\n')
+  # naver.set_bold()
+  naver.input_text('안녕하세요\n')
   
-  naver.setBold()
-  naver.setFontSize(13)
-  naver.inputText('안녕하세요1\n')
+  naver.set_bold()
+  naver.set_font_size(13)
+  naver.input_text('안녕하세요1\n')
 
-  naver.setFontSize(15)
-  naver.inputText('안녕하세요2\n')
+  naver.set_font_size(15)
+  naver.input_text('안녕하세요2\n')
 
-  naver.setFontSize(16)
-  naver.inputText('안녕하세요3 ')
+  naver.set_font_size(16)
+  naver.input_text('안녕하세요3 ')
 
-  naver.setBold()
-  naver.inputText(' 안녕하세요4')
+  naver.set_bold()
+  naver.input_text(' 안녕하세요4')

@@ -53,7 +53,7 @@ class Node:
 
       'p': '15',
       'code': '15',
-      'a': '15'
+      'a': '15',
     }
 
     return map.get(tag, '15')
