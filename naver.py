@@ -5,15 +5,27 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.file_detector import UselessFileDetector
 from config import NAVER_ID, NAVER_PASSWORD
 
+import platform
 
 class Naver:
   
   def __init__(self, ID, PASSWORD):
-    self.driver = webdriver.Chrome('./chromedriver')
+    self.driver = self._get_chromedriver()
     self.id = "'%s'"%(ID)
     self.password = "'%s'"%(PASSWORD)
     
     self.login()
+
+  @staticmethod
+  def _get_chromedriver():
+    BASE_PATH = "./driver"
+    path = {
+      "Windows": "%s/chromedriver.exe"%(BASE_PATH),
+      "darwin ": "%s/chromedriver_mac64/chromedriver"%(BASE_PATH),
+      "Linux": "%s/chromedriver_linux64/chromedriver"%(BASE_PATH)
+    }
+    print(path.get(platform.system(), "./driver/chromedriver"))
+    return webdriver.Chrome(path.get(platform.system(), "./driver/chromedriver"))
 
   def login(self):
     self.driver.get('https://nid.naver.com/nidlogin.login')
@@ -133,32 +145,34 @@ class Naver:
 if __name__ == "__main__":
 
   # 아이디/비밀번호를 입력해준다.
-  naver = Naver(NAVER_ID, NAVER_PASSWORD)
+#   naver = Naver(NAVER_ID, NAVER_PASSWORD)
 
-  naver.set_bold()
+#   naver.set_bold()
 
-  naver.set_font_size(13)
+#   naver.set_font_size(13)
 
-  code1 = 'let a = 10;'
-  code2 = '''function test() {
-  console.log('hello world');
-}'''
+#   code1 = 'let a = 10;'
+#   code2 = '''function test() {
+#   console.log('hello world');
+# }'''
 
-  naver.set_code(code1)
-  naver.set_code(code2)
+#   naver.set_code(code1)
+#   naver.set_code(code2)
 
-  # naver.set_bold()
-  naver.input_text('안녕하세요\n')
+#   # naver.set_bold()
+#   naver.input_text('안녕하세요\n')
   
-  naver.set_bold()
-  naver.set_font_size(13)
-  naver.input_text('안녕하세요1\n')
+#   naver.set_bold()
+#   naver.set_font_size(13)
+#   naver.input_text('안녕하세요1\n')
 
-  naver.set_font_size(15)
-  naver.input_text('안녕하세요2\n')
+#   naver.set_font_size(15)
+#   naver.input_text('안녕하세요2\n')
 
-  naver.set_font_size(16)
-  naver.input_text('안녕하세요3 ')
+#   naver.set_font_size(16)
+#   naver.input_text('안녕하세요3 ')
 
-  naver.set_bold()
-  naver.input_text(' 안녕하세요4')
+#   naver.set_bold()
+#   naver.input_text(' 안녕하세요4')
+  test = Naver._get_chromedriver()
+  print(test)
