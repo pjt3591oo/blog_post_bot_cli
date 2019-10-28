@@ -27,4 +27,12 @@ pip install -r requirements.txt
 $ python controller.py
 ```
 
-* release
+### issue
+
+* 이미지 경로문제
+
+윈도우의 경우 다음과 같이 경로를 작성
+
+```
+![](C:\\Users\\user\\Desktop\\blog_post_bot_cli\\data\\img.png)
+```
