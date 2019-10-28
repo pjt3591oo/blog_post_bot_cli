@@ -24,7 +24,7 @@ class Naver:
       "darwin ": "%s/chromedriver_mac64/chromedriver"%(BASE_PATH),
       "Linux": "%s/chromedriver_linux64/chromedriver"%(BASE_PATH)
     }
-    print(path.get(platform.system(), "./driver/chromedriver"))
+
     return webdriver.Chrome(path.get(platform.system(), "./driver/chromedriver"))
 
   def login(self):
@@ -131,9 +131,40 @@ class Naver:
   def move_blog_editor(self):
     self.driver.get('https://blog.naver.com/%s/postwrite'%(self.id.replace("'", '')))
     time.sleep(2)
+
+    self.already_write_popup_close()
+    self.helper_close()
     
+  # 블로그 접속하면 우측에 뜨는 도움말 닫기
+  # 해당 도움말 때문에 .se-component-content 마지막 클릭시 clickable에러 발생
+  def helper_close(self):
+    '''
+    '''
+    query = '.se-help-panel-close-button'
+    try:
+      helper_dom = self.driver.find_element_by_css_selector(query)
+      helper_dom.click()
+    except:
+      print('우측에 helper가 없음.')
+
+    time.sleep(0.3)
+
+  # "작성 중인 글이 있습니다." 팝업
+  def already_write_popup_close(self):
+    '''
+    '''
+    query = '.se-popup-button-cancel'
+
+    try:
+      already_wirte = self.driver.find_element_by_css_selector(query)
+      already_wirte.click()
+    except:
+      print('작성 중인 글이 있습니다. 팝업이 없음')
+
+    time.sleep(0.3)
+
   def last_text_line_focus(self):
-    selector = '.se-text-paragraph'
+    selector = '.se-text-paragraph'  #  .se-component-content
     # query = "var componentCnt = document.getElementsByClassName('%s').length; document.getElementsByClassName('%s')[componentCnt - 1].click()"%(selector, selector)
     components = self.driver.find_elements_by_css_selector(selector)
     # self.driver.execute_script(query)
@@ -145,34 +176,32 @@ class Naver:
 if __name__ == "__main__":
 
   # 아이디/비밀번호를 입력해준다.
-#   naver = Naver(NAVER_ID, NAVER_PASSWORD)
+  naver = Naver(NAVER_ID, NAVER_PASSWORD)
 
-#   naver.set_bold()
+  naver.set_bold()
 
-#   naver.set_font_size(13)
+  naver.set_font_size(13)
 
-#   code1 = 'let a = 10;'
-#   code2 = '''function test() {
-#   console.log('hello world');
-# }'''
+  code1 = 'let a = 10;'
+  code2 = '''function test() {
+  console.log('hello world');
+}'''
 
-#   naver.set_code(code1)
-#   naver.set_code(code2)
+  naver.set_code(code1)
+  naver.set_code(code2)
 
-#   # naver.set_bold()
-#   naver.input_text('안녕하세요\n')
+  # naver.set_bold()
+  # naver.input_text('안녕하세요\n')
   
-#   naver.set_bold()
-#   naver.set_font_size(13)
-#   naver.input_text('안녕하세요1\n')
+  # naver.set_bold()
+  # naver.set_font_size(13)
+  # naver.input_text('안녕하세요1\n')
 
-#   naver.set_font_size(15)
-#   naver.input_text('안녕하세요2\n')
+  # naver.set_font_size(15)
+  # naver.input_text('안녕하세요2\n')
 
-#   naver.set_font_size(16)
-#   naver.input_text('안녕하세요3 ')
+  # naver.set_font_size(16)
+  # naver.input_text('안녕하세요3 ')
 
-#   naver.set_bold()
-#   naver.input_text(' 안녕하세요4')
-  test = Naver._get_chromedriver()
-  print(test)
+  # naver.set_bold()
+  # naver.input_text(' 안녕하세요4')

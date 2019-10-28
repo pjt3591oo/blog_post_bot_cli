@@ -10,7 +10,6 @@ class Root:
     self.nodes.append(node)
 
   def show(self):
-    
     print(1)
   
 
@@ -85,7 +84,7 @@ class Node:
       'b': True
     }
 
-    return map.get(tag, 'False')
+    return map.get(tag, False)
 
 def read(path):
   html = markdown_path(path)
