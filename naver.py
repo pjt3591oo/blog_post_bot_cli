@@ -138,8 +138,6 @@ class Naver:
   # 블로그 접속하면 우측에 뜨는 도움말 닫기
   # 해당 도움말 때문에 .se-component-content 마지막 클릭시 clickable에러 발생
   def helper_close(self):
-    '''
-    '''
     query = '.se-help-panel-close-button'
     try:
       helper_dom = self.driver.find_element_by_css_selector(query)
@@ -151,8 +149,6 @@ class Naver:
 
   # "작성 중인 글이 있습니다." 팝업
   def already_write_popup_close(self):
-    '''
-    '''
     query = '.se-popup-button-cancel'
 
     try:
