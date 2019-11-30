@@ -1,36 +1,46 @@
 from markdown2 import markdown_path
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 class Root: 
 
   def __init__(self):
-    self.nodes = []
+    self.contents = []
 
-  def add_node(self, node):
-    self.nodes.append(node)
+  def add_contents(self, content):
+    self.contents.append(content)
 
   def show(self):
     print(1)
   
+class Children:
 
-class Node:
+  def __init__(self, **kwargs):
+    self.origin = kwargs.get('origin')
+    self.type = kwargs.get('type', 'text')
+    self.size = kwargs.get('size', 15)
+    self.bold = kwargs.get('bold', False)
+    self.text = kwargs.get('text', '')
+    self.color = kwargs.get('color', '#000')
+
+class Content:
   
   def __init__(self, children): 
     self.type = ""             # text, code, img
     self.size = ""             # 15, 16, ...
-    self.bold = ""             # True, False
+    self.bold = False          # True, False
     self.text = children.text.strip().replace('  ', ' ')  
     self.children = children
     self.childrens = []        # [Node, Node, ...]
     
     self.name_parse()
-
+    self.content_parse()
+    
   def add_childrens(self, children):
     self.childrens.append(children)
 
   def show(self):
     print("Type: %s \nSize: %s \nBold: %s \nText: %s \nChildren Length: %d"%(self.type, self.size, self.bold, self.text, len(self.childrens)))
-    print()
+    print([{"type": children.type, "size": children.size, "bold": children.bold, "text": children.text, "color": children.color } for children in self.childrens])
     print()
 
   def name_parse(self):
@@ -40,6 +50,20 @@ class Node:
     self.text = self.get_tag_text()
     self.size = self.tag_size_map(tag)
     self.bold = self.tag_bold_map(tag)
+
+  def content_parse(self):
+    
+    childrens = [children for children in self.children.contents if (type(children) == NavigableString and children.string.strip()) or type(children) == Tag]
+    for children in childrens:
+      c = {}
+      if self.type == 'text':
+        text = children.string.strip()
+        bold = (children.name == 'code' or children.name == 'strong') and True or False
+        c = Children(origin=children, type=self.type, size=self.size, bold=bold, text=text )
+      else: 
+        c = Children(origin=children, type=self.type, size=self.size, bold=self.bold, text=self.text )
+
+      self.childrens.append(c)
 
   def tag_size_map(self, tag):
     map = {
@@ -86,6 +110,13 @@ class Node:
 
     return map.get(tag, False)
 
+  def get_children(self):
+    return self.childrens
+
+  def add_children(self, children):
+    self.childrens.append(children)
+
+
 def read(path):
   html = markdown_path(path)
 
@@ -101,14 +132,15 @@ def convert(soup):
 
   for children in childrens: 
     if children.name !=None: 
-      root.add_node(Node(children))
+      content = Content(children)
+      root.add_contents(content)
 
   return root
 
 if __name__ == '__main__':
-  soup = read('./data/test1.md')
+  soup = read('./data/test2.md')
 
   root = convert(soup)
-  for node in root.nodes:
-    node.show()
+  for content in root.contents:
+    content.show()
    
