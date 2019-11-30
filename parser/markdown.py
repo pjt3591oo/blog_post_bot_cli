@@ -54,16 +54,28 @@ class Content:
   def content_parse(self):
     
     childrens = [children for children in self.children.contents if (type(children) == NavigableString and children.string.strip()) or type(children) == Tag]
-    for children in childrens:
+    for idx, children in enumerate(childrens):
       c = {}
+      is_last_text_enter = False
+
       if self.type == 'text':
-        text = children.string.strip()
+        text = children.string.strip().replace('\n', '')
         bold = (children.name == 'code' or children.name == 'strong') and True or False
         c = Children(origin=children, type=self.type, size=self.size, bold=bold, text=text )
+        if idx == (len(childrens) - 1) :
+          is_last_text_enter = self.is_last_text_enter()
+
       else: 
         c = Children(origin=children, type=self.type, size=self.size, bold=self.bold, text=self.text )
 
       self.childrens.append(c)
+     
+      if is_last_text_enter:
+        self.childrens.append(Children(origin="enter", type="text", size="15", bold=False, text="\n"))
+      
+
+  def is_last_text_enter(self):
+    return self.type == 'text' and self.size == '15'
 
   def tag_size_map(self, tag):
     map = {

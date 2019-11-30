@@ -43,11 +43,9 @@ class Naver:
     # self.last_text_line_focus()
     selector = "se-toolbar-button-bold"
     s = "document.getElementsByClassName('%s')[0].click()"%(selector)
-    time.sleep(0.3)
+    time.sleep(0.4)
     self.driver.execute_script(s)
     time.sleep(1.5)
-
-    print('>>> font weight complete <<<')
 
   def set_font_size(self, size):
     # self.last_text_line_focus()
@@ -76,8 +74,6 @@ class Naver:
     self.driver.execute_script(query)
     time.sleep(1.0)
 
-    print('>>> font size complete <<<')
-
   def set_code(self,  text): 
     # 소스코드 추가
     selector = "se-toolbar-button-code" 
@@ -94,8 +90,6 @@ class Naver:
     actions.send_keys(text)
     actions.perform()
     time.sleep(1.5)
-
-    print('>>> typing code complete <<<')
 
   def input_img_btn_click(self):
     # 사진 버튼을 눌러야 input창이 발생
@@ -119,14 +113,12 @@ class Naver:
     time.sleep(0.5)
 
   def input_text(self, text):
-    self.last_text_line_focus()
+    # self.last_text_line_focus()
   
     actions = ActionChains(self.driver)
     actions.send_keys(text)
     actions.perform()
-    time.sleep(0.5)
-
-    print('>>> typing text complete <<<')
+    time.sleep(0.7)
 
   def move_blog_editor(self):
     self.driver.get('https://blog.naver.com/%s/postwrite'%(self.id.replace("'", '')))
