@@ -5,3 +5,7 @@ chromedriver*
 data/*.md
 __pycache__
 *.log
+dist/
+build/
+bpb.egg-info
+bpb.pyc

@@ -1,8 +1,8 @@
 import json, time
 
-from utils.progress_bar import progress_bar as pb
-from parser import markdown
-from naver import Naver
+from bpb.utils.progress_bar import progress_bar as pb
+from bpb.parser import markdown
+from bpb.lib.naver import Naver
 
 class Controller():
   def __init__(self, path, account_set_path, webdriver_path, resource_dir, **kwargs):

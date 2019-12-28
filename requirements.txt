@@ -2,4 +2,5 @@ selenium>=3.141.0
 bs4>=2.3.8
 lxml>=4.4.1
 markdown2>=2.3.8
+logzero>=1.5.0
 logger>=1.5.0
