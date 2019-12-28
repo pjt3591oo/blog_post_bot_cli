@@ -1,5 +1,10 @@
 # NBAPB (Blog Auto Posting Bot)
 
+* 데모영상
+
+  [데모영상 바로가기](https://blog.naver.com/pjt3591oo/221722855748)
+
+
 * 설치
 
   ```bash
