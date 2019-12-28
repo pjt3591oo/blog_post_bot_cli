@@ -1,17 +1,24 @@
-# import parser
-# print(parser.markdown)
-import naver 
-from parser import markdown
-from config import NAVER_ID, NAVER_PASSWORD
+import json, time
+
 from utils.progress_bar import progress_bar as pb
+from parser import markdown
+from naver import Naver
 
-class Post():
-  def __init__(self, path, id, password, **kwargs):
-    if kwargs.get('debug', False):
-      self.naver = naver.Naver(id, password)
+class Controller():
+  def __init__(self, path, account_set_path, webdriver_path, resource_dir, **kwargs):
+    '''
+      params
+        path: 마크다운 파일 경로
+        account_set_path: 네이버 계정정보 파일 경로
 
+    '''
+    # if kwargs.get('debug', False):
+    with open(account_set_path, 'r') as json_file:
+      f = json.loads(json_file.read())
+      self.naver = Naver(f['NAVER_ID'], f['NAVER_PASSWORD'], webdriver_path)
+    
     soup = markdown.read(path)
-    self.root = markdown.convert(soup)
+    self.root = markdown.convert(soup, resource_dir)
 
   def text_bold_setting(self, content):
     if content.bold : 
@@ -51,6 +58,18 @@ class Post():
       elif content.type == 'img':
         self.img_setting(content)
 
+    print('\n\n%s posting complete %s'%('*'*25, '*'*25))
+    print('60초 후 브라우저가 꺼집니다 그 전에 저장하세요.')
+    time.sleep(60)
+
 if __name__ == "__main__":
-  post = Post('./data/test2.md', NAVER_ID, NAVER_PASSWORD, debug=True)
-  post()
+
+  NAVER_ID = ''
+  NAVER_PASSWORD = ''
+  
+  account_set_path = './config.json'
+  web_driver = './driver/chromedriver'
+  resource_dir = './data/'
+    
+  controller = Controller('./data/test2.md', account_set_path,web_driver, resource_dir, debug=True)
+  controller()

@@ -1,31 +1,23 @@
 from selenium import webdriver
-import time
+import time, json
 from selenium.webdriver.common import keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.file_detector import UselessFileDetector
-from config import NAVER_ID, NAVER_PASSWORD
 
 import platform
 
 class Naver:
   
-  def __init__(self, ID, PASSWORD):
-    self.driver = self._get_chromedriver()
+  def __init__(self, ID, PASSWORD,  webdriver_path):
+    self.driver = self._get_chromedriver(webdriver_path)
     self.id = "'%s'"%(ID)
     self.password = "'%s'"%(PASSWORD)
     
     self.login()
 
   @staticmethod
-  def _get_chromedriver():
-    BASE_PATH = "./driver"
-    path = {
-      "Windows": "%s/chromedriver.exe"%(BASE_PATH),
-      "darwin ": "%s/chromedriver_mac64/chromedriver"%(BASE_PATH),
-      "Linux": "%s/chromedriver_linux64/chromedriver"%(BASE_PATH)
-    }
-
-    return webdriver.Chrome(path.get(platform.system(), "./driver/chromedriver"))
+  def _get_chromedriver(webdriver_path):
+    return webdriver.Chrome(webdriver_path)
 
   def login(self):
     self.driver.get('https://nid.naver.com/nidlogin.login')
@@ -137,7 +129,7 @@ class Naver:
     except:
       print('우측에 helper가 없음.')
 
-    time.sleep(0.3)
+    time.sleep(0.5)
 
   # "작성 중인 글이 있습니다." 팝업
   def already_write_popup_close(self):
@@ -149,7 +141,7 @@ class Naver:
     except:
       print('작성 중인 글이 있습니다. 팝업이 없음')
 
-    time.sleep(0.3)
+    time.sleep(0.5)
 
   def last_text_line_focus(self):
     selector = '.se-text-paragraph'  #  .se-component-content
@@ -163,8 +155,20 @@ class Naver:
 
 if __name__ == "__main__":
 
+  NAVER_ID = ''
+  NAVER_PASSWORD = ''
+  
+  account_set_path = './config.json'
+  webdriver_path = ''
+
+  with open(account_set_path) as json_file:
+    f = json.loads(json_file)
+
+    NAVER_ID = f['id']
+    NAVER_PASSWORD = f['password']
+
   # 아이디/비밀번호를 입력해준다.
-  naver = Naver(NAVER_ID, NAVER_PASSWORD)
+  naver = Naver(NAVER_ID, NAVER_PASSWORD, webdriver_path)
 
   naver.set_bold()
 

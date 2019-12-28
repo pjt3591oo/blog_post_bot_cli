@@ -1,5 +1,7 @@
 from markdown2 import markdown_path
 from bs4 import BeautifulSoup, NavigableString, Tag
+import os 
+
 
 class Root: 
 
@@ -24,7 +26,7 @@ class Children:
 
 class Content:
   
-  def __init__(self, children): 
+  def __init__(self, children, resource_dir): 
     self.type = ""             # text, code, img
     self.size = ""             # 15, 16, ...
     self.bold = False          # True, False
@@ -32,7 +34,7 @@ class Content:
     self.children = children
     self.childrens = []        # [Node, Node, ...]
     
-    self.name_parse()
+    self.name_parse(resource_dir)
     self.content_parse()
     
   def add_childrens(self, children):
@@ -43,11 +45,11 @@ class Content:
     print([{"type": children.type, "size": children.size, "bold": children.bold, "text": children.text, "color": children.color } for children in self.childrens])
     print()
 
-  def name_parse(self):
+  def name_parse(self, resource_dir):
     tag = self.children.name
 
     self.type = self.tag_type_map()
-    self.text = self.get_tag_text()
+    self.text = self.get_tag_text(resource_dir)
     self.size = self.tag_size_map(tag)
     self.bold = self.tag_bold_map(tag)
 
@@ -93,11 +95,11 @@ class Content:
 
     return map.get(tag, '15')
 
-  def get_tag_text(self):
+  def get_tag_text(self, resource_dir):
     map = {
       "text": lambda : self.children.text,
       "code": lambda : self.children.text,
-      "img": lambda: self.children.find('img').get('src')
+      "img": lambda: os.path.join(resource_dir, self.children.find('img').get('src').split('/')[-1])
     }
     
     return map[self.type]()
@@ -138,21 +140,22 @@ def _soup(contents):
   soup = BeautifulSoup(contents, 'lxml')
   return soup
 
-def convert(soup):
+def convert(soup, resource_dir):
   childrens = soup.find('body').children
   root = Root()
 
   for children in childrens: 
     if children.name !=None: 
-      content = Content(children)
+      content = Content(children, resource_dir)
       root.add_contents(content)
 
   return root
 
 if __name__ == '__main__':
+  resource_dir = '/Users/bagjeongtae/Desktop/markdown_to_convert/data'
   soup = read('./data/test2.md')
 
-  root = convert(soup)
+  root = convert(soup, resource_dir)
   for content in root.contents:
     content.show()
    

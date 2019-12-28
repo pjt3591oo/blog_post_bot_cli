@@ -1,4 +1,7 @@
 config.py
-chromedriver
+config.json
+config.*
+chromedriver*
 data/*.md
 __pycache__
+*.log
