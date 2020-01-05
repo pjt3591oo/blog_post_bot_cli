@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 script = (sys.platform == "win32" and "lib\\bpb.py" or "bin/bpb")
 setup(
     name="bpb",
-    version=1.0,
+    version=1.1,
     maintainer="Mung",
     maintainer_email="pjt3591oo@gmail.com",
     author="Mung",
